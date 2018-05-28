@@ -44,10 +44,20 @@ module.exports = function() {
 
     /**
      * Configurando o app para usar bodyParser
-     * Isso permitirá pegar os dados de um post 
+     * Isso permitirá pegar os dados de um post.
+     * O bodyParser popula o campo req.body com os parametros do POST.
      */    
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
+    /**
+     * Nem todos os navegadores suportam os verbos DELETE e PUT, inclusive, há redes que filtram
+     * requisições destes tipos. Uma solução empregada é usar o verbo POST, mas adicionando no
+     * header da requisição o 'Content-type X-HTTP-Method-Override'. Nele, informamos qual verbo
+     * pretendemos utilizar, por exemplo, DELETE. O servidor precisa estar preparado para extrair
+     * esta informação e chamar a rota para o tipo de verbo desejado.
+     * No express, é usado o middleware 'method-override'.
+     */
+    app.use(require('method-override')());
 
     /**
      * TESTE: criando uma rota para a api
